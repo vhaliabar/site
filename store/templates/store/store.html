@@ -1,0 +1,75 @@
+{% extends 'store/main.html' %}
+{% load static %}
+
+{% block content %}
+
+<hr>
+<form method='get' action={% url 'store'%} >
+     <div class='row'>
+          
+          <div class="col-lg-3">
+               <label>Product name</label>
+               <input type="text" class="form-control" placeholder="Product name..." name='query' value="{{ query }}">
+          </div>
+             
+
+
+          <div class='col-lg-2'>
+                    <label>Price from</label>
+                    <input type="text" class="form-control" placeholder="PRICE FROM" name='price_from' value={{ price_from|floatformat:0 }}>
+          </div>
+
+          <div class='col-lg-2'>
+               <label>Price to</label>
+               <div >
+                    <input type="text" class="form-control" placeholder="PRICE TO" name='price_to' value={{ price_to|floatformat:0 }}>
+               </div>
+          </div>
+
+
+          <div class="col-lg-2">
+               <label>Sorted by:</label>
+               <select class="form-control" name='sorting'>
+                 <option selected> Sorting parameters...</option>
+                 <option value="name" {% if sorting == 'name' %} selected{% endif %}>From A to Z</option>
+                 <option value="-name" {% if sorting == '-name' %} selected{% endif %}>From Z to A</option>
+                 <option value="price" {% if sorting == 'price' %} selected{% endif %}>Price low-high</option>
+                 <option value="-price" {% if sorting == '-price' %} selected{% endif %}>Price high-low</option>
+               </select>
+             </div>
+
+          <div class='col-lg-2'>
+               <div >
+                    <label >Sort/Search</label>
+                    <button type="submit" class="btn btn-outline-primary ">Search. . .</button>
+               </div>
+          </div>
+     
+     </div>
+</form>
+<hr>
+
+
+
+<div class='row'>
+          {% for product in products %}
+          <div class='col-lg-4'>
+               <img class='thumbnail' src={{ product.imageURL}}>
+               <div class='box-element product'>
+                    
+               <h6><strong>{{product.name}}</strong></h6>
+               <hr>
+               <button data-product='{{product.id}}' data-action='add' class='btn btn-outline-secondary add-btn update-cart'>
+                    Add to cart</button>
+               <a class='btn btn-outline-success'href='#'>View</a>
+               <h4 style='float:right;'>${{product.price|floatformat:2}}</h4>
+               </div>
+
+          </div>
+          {% endfor %}
+          
+
+</div>
+
+
+{% endblock content %}
