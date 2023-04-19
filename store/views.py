@@ -6,6 +6,7 @@ import json
 import datetime
 
 from .utils import cookieCart, cartData, guestOrder
+from django.core.paginator import Paginator
 
 # Create your views here.
 def categories_processor(request):
@@ -21,12 +22,16 @@ def store(request):
     price_to = request.GET.get('price_to', 100000)
     sorting = request.GET.get('sorting', '-name')
     #products = Product.objects.order_by('-name')
-    products = Product.objects.filter(Q(name__icontains=query)).filter(price__gte=price_from).filter(price__lte=price_to)
-    context = {'products': products.order_by(sorting),
+    products = Product.objects.filter(Q(name__icontains=query)).filter(price__gte=price_from).filter(price__lte=price_to).order_by(sorting)
+    p = Paginator(products, 6)
+    page = request.GET.get('page')
+    product_list = p.get_page(page)
+    context = {'products': product_list,
                'query':query,
                'price_from':price_from,
                'price_to':price_to,
-               'sorting':sorting}
+               'sorting':sorting,
+               'product_list':product_list}
     return render(request, 'store/store.html', context)
 
 def cart(request):
